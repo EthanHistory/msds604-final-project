@@ -41,7 +41,17 @@ class BaseTimeSeriesModelCrossValidation:
         return result, best_p
     
 
-def parameter_mixer(parameter_names: List[str], parameter_lists: List[List]):
+def parameter_mixer(parameter_names: List[str], parameter_lists: List[List]) -> List[Dict]:
+    """Helper function to re-organize your parameter
+    the same parameter should be in the same index of both `parameter_names` and `parameter_lists`
+
+    Args:
+        parameter_names (List[str]): list of parameter names
+        parameter_lists (List[List]): list of possible parameter values for each parameter
+
+    Returns:
+        List[Dict]: a list of parameters. Each parameter is defined as a dictionary
+    """
     assert(len(parameter_names) == len(parameter_lists))
     params = [
         {
