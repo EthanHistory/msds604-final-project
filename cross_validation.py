@@ -3,6 +3,7 @@ from itertools import product
 from base_model import BaseModel
 from sklearn.metrics import mean_squared_error
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 class BaseTimeSeriesModelCrossValidation:
@@ -11,7 +12,7 @@ class BaseTimeSeriesModelCrossValidation:
         self.rolling_size = rolling_size
         self.validation_size = validation_size
     
-    def cross_validation(self, y, model:BaseModel, params: List[Dict], X=None):
+    def cross_validation(self, y: pd.Series, model:BaseModel, params: List[Dict], X: pd.DataFrame=None):
         result = []
         best_rmse, best_p = float('inf'), None
         print('[%s] Start cross-validation' % (model.model_name))
@@ -19,11 +20,11 @@ class BaseTimeSeriesModelCrossValidation:
             rmse = 0
             initial_train_size = len(y) - self.validation_size - (self.num_fold-1) * self.rolling_size
             for k in range(self.num_fold):
-                y_train = y[:initial_train_size+k*self.rolling_size]
-                y_val = y[initial_train_size+k*self.rolling_size:initial_train_size+k*self.rolling_size+self.validation_size]
+                y_train = y.iloc[:initial_train_size+k*self.rolling_size]
+                y_val = y.iloc[initial_train_size+k*self.rolling_size:initial_train_size+k*self.rolling_size+self.validation_size]
 
                 if X is not None:
-                    X_train = X[:initial_train_size+k*self.rolling_size]
+                    X_train = X.iloc[:initial_train_size+k*self.rolling_size]
                 else:
                     X_train = None
 
@@ -38,7 +39,7 @@ class BaseTimeSeriesModelCrossValidation:
                 best_rmse, best_p = rmse_avg, p
                 print('[%s] P=%s RMSE=%.3f' % (model.model_name, p, rmse_avg))
         print('[%s] P=%s Best RMSE=%.3f' % (model.model_name, best_p, best_rmse))
-        return result, best_p
+        return result, best_p, best_rmse
     
 
 def parameter_mixer(parameter_names: List[str], parameter_lists: List[List]) -> List[Dict]:

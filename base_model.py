@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import numpy as np
+import pandas as pd
 
 class BaseModel(ABC):
     def __init__(self, model_name):
@@ -10,7 +10,7 @@ class BaseModel(ABC):
         self.model = None
 
     @abstractmethod
-    def fit(y: np.array, param:dict, X=np.array):
+    def fit(y: pd.Series, param:dict, X=pd.DataFrame):
         """Fit the model
         [Warning] you should use `self.model` attribute to define your model
 
