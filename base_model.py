@@ -10,7 +10,7 @@ class BaseModel(ABC):
         self.model = None
 
     @abstractmethod
-    def fit(y: pd.Series, param:dict, X=pd.DataFrame):
+    def fit(y: pd.Series, param:dict, X:pd.DataFrame = None):
         """Fit the model
         [Warning] you should use `self.model` attribute to define your model
 
